@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="card-title">Patient Profile</h2>
+
+    <div class="card shadow-sm p-3">
+        <div class="row">
+
+            <div class="col-md-3 text-center">
+                <img src="{{ url_for('static', filename=(patient.user.profile_photo if patient.user.profile_photo else 'default_profile.png')) }}"
+                     class="rounded-circle" width="140" height="140">
+            </div>
+
+            <div class="col-md-9">
+                <h3>
+                  {% if patient.user.gender=='Male' %} Mr.
+                  {% else %} Ms.
+                  {% endif %}{{ patient.user.first_name}}
+                  {{ patient.user.last_name or '' }}
+                </h3>
+                <p><strong>Age:</strong> {{ patient.user.age }} years </p>
+                <p><strong>Contact:</strong> {{ patient.user.phone }} </p>
+                <p><strong>Emergency Contact:</strong> {{ patient.emergency_contact }}</p>
+            </div>
+
+        </div>
+    </div>
+  <hr>
+  <div class="page-title" style="font-size:1.0rem">Appointment History</div>
+  <table class="table-clean">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Date & Time</th>
+        <th>Doctor</th>
+        <th>Diagnosis</th>
+        <th>Prescription</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for a in history %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>
+                {{ a.date.strftime('%Y-%m-%d') }} 
+                <span class="small-muted d-block">{{ a.time.strftime('%H:%M') }}</span>
+            </td>
+          <td>
+                <strong>{{ a.doctor.user.full_name() }}</strong>
+                <span class="small-muted d-block">{{ a.doctor.specialization }}</span>
+            </td>
+          <td>{{ a.treatment.diagnosis if a.treatment else continue }}</td>
+          <td>{{ a.treatment.prescription if a.treatment else continue }}</td>
+          <td>{{ a.treatment.treatment_notes if a.treatment else continue }}</td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="8">
+            <div class="empty-state">
+                <div class="empty-state-icon">📅</div>
+                <div class="empty-state-text">Currently no Doctors available.</div>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

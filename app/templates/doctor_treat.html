@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Treat Appointment{% endblock %}
+{% block content %}
+  <div class="card">
+    <div class="page-title">Treat Appointment</div>
+    <div class="small-muted">Patient: {{ appointment.patient.user.first_name or appointment.patient.name }}</div>
+    <form method="post">
+      <div class="form-row">
+        <input class="form-control" name="diagnosis" placeholder="Diagnosis" value="{{ appointment.treatment.diagnosis }}">
+      </div>
+      <div class="form-row">
+        <input class="form-control" name="prescription" placeholder="Prescription" value="{{ appointment.treatment.prescription }}">
+      </div>
+      <div class="form-row">
+        <textarea class="form-control" name="notes" placeholder="Notes">{{ appointment.treatment.treatment_notes }}</textarea>
+      </div>
+      <div class="mt-2">
+        <button class="btn-outline" type="submit">Save Treatment</button>
+        <a class="btn-outline" href="{{ url_for('doctor_appointments') }}">Back</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block title %}Manage Availability{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="card">
+        <div class="admin-top">
+            <div>
+                <div class="card-title">Manage Availability</div>
+                <div class="small-muted">Add custom time ranges for patients to book. You can set maximum patients per slot.</div>
+            </div>
+            <div>
+                <a href="{{ url_for('doctor_dashboard') }}" class="btn-outline">Back to Dashboard</a>
+            </div>
+        </div>
+
+        <!-- Add New Slot Form -->
+        <form method="POST" action="{{ url_for('doctor_availability') }}">
+            <div class="form-section">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="date" class="form-label">Date</label>
+                        <input type="date" id="date" name="date" class="form-control {% if errors.get('date') %}is-invalid{% endif %}" required>
+                        {% if errors.get('date') %}
+                            <small class="text-danger">{{ errors['date'] }}</small>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="start_time" class="form-label">Start time</label>
+                        <input type="time" id="start_time" name="start_time" class="form-control {% if errors.get('start_time') %}is-invalid{% endif %}" required>
+                        {% if errors.get('start_time') %}
+                            <small class="text-danger">{{ errors['start_time'] }}</small>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="end_time" class="form-label">End time</label>
+                        <input type="time" id="end_time" name="end_time" class="form-control {% if errors.get('end_time') %}is-invalid{% endif %}" required>
+                        {% if errors.get('end_time') %}
+                            <small class="text-danger">{{ errors['end_time'] }}</small>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="max_patients" class="form-label">Max patients</label>
+                        <input type="number" id="max_patients" name="max_patients" class="form-control max-patients-input {% if errors.get('max_patients') %}is-invalid{% endif %}" value="1" min="1" max="50">
+                        <span class="helper-text">Minimum 1 patient</span>
+                        {% if errors.get('max_patients') %}
+                            <small class="text-danger">{{ errors['max_patients'] }}</small>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn-add">Add slot</button>
+                    </div>
+                </div>
+                
+                {% if errors.get('general') %}
+                    <div style="margin-top: 10px;">
+                        <small class="text-danger">{{ errors['general'] }}</small>
+                    </div>
+                {% endif %}
+            </div>
+        </form>
+
+        <!-- Display Existing Slots -->
+        <div class="availability-section">
+            <h3 class="section-title">Upcoming availability (next 14 days)</h3>
+            
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Capacity</th>
+                            <th>Booked</th>
+                            <th>Remaining</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if availabilities and availabilities|length > 0 %}
+                            {% for avail in availabilities %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ avail.date.strftime('%d %b %Y') }}</td>
+                                <td>{{ avail.start_time.strftime('%I:%M %p') }} - {{ avail.end_time.strftime('%I:%M %p') }}</td>
+                                <td>{{ avail.slot_capacity }}</td>
+                                <td>{{ avail.booked_count }}</td>
+                                <td>{{ avail.remaining }}</td>
+                                <td>
+                                    {% if avail.is_full %}
+                                        <span class="status-badge status-full">Full</span>
+                                    {% elif avail.status == 'blocked' %}
+                                        <span class="status-badge status-blocked">Blocked</span>
+                                    {% elif avail.booked_count > 0 %}
+                                        <span class="status-badge status-available">Available</span>
+                                    {% else %}
+                                        <span class="status-badge status-open">Open</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <a href="{{ url_for('doctor_edit_availability', id=avail.id) }}" class="btn-action btn-edit-small">Edit</a>
+                                        <form method="POST" action="{{ url_for('doctor_delete_availability', id=avail.id) }}" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this slot?');">
+                                            <button type="submit" class="btn-action btn-delete-small">Delete</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="8">
+                                    <div class="empty-state">
+                                        <div class="empty-state-icon">📅</div>
+                                        <div class="empty-state-text">No availability set for the next 14 days.</div>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,114 @@
+<form method="POST" enctype="multipart/form-data">
+    <!-- Role Selection (Determines which fields appear) -->
+    <div class="mb-3">
+        <label for="role" class="form-label fw-bold">Select Role (Required)</label>
+        <select id="role" name="role" class="form-select" required>
+            <option value="">-- Select Role --</option>
+            <option value="patient">Patient</option>
+            <option value="doctor">Doctor</option>
+        </select>
+    </div>
+
+    <!-- BASIC USER FIELDS -->
+    <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" id="username" name="username" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" id="email" name="email" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" id="password" name="password" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="confirm_password" class="form-label">Confirm Password</label>
+        <input type="password" id="confirm_password" name="confirm_password" class="form-control" required>
+    </div>
+
+    <hr class="my-4">
+    <h5 class="mb-3 text-muted">Personal Details</h5>
+
+    <!-- GENERAL PERSONAL FIELDS (Hidden/Shown by JS based on role) -->
+    <div class="general-field mb-3">
+        <label for="first_name" class="form-label">First Name</label>
+        <input type="text" id="first_name" name="first_name" class="form-control">
+    </div>
+    
+    <div class="general-field mb-3">
+        <label for="last_name" class="form-label">Last Name</label>
+        <input type="text" id="last_name" name="last_name" class="form-control">
+    </div>
+
+    <div class="general-field mb-3">
+        <label for="phone" class="form-label">Phone Number</label>
+        <input type="tel" id="phone" name="phone" class="form-control">
+    </div>
+    
+    <div class="general-field mb-3">
+        <label for="age" class="form-label">Age</label>
+        <input type="number" id="age" name="age" class="form-control" min="1" max="120">
+    </div>
+
+    <div class="general-field mb-3">
+        <label for="gender" class="form-label">Gender</label>
+        <select id="gender" name="gender" class="form-select">
+            <option value="">-- Select Gender --</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+        </select>
+    </div>
+
+    <div class="general-field mb-3">
+        <label for="address" class="form-label">Address</label>
+        <textarea id="address" name="address" class="form-control" rows="2"></textarea>
+    </div>
+
+    <!-- DOCTOR SPECIFIC FIELDS -->
+    <div id="doctor-fields" style="display: none;">
+        <hr class="my-4">
+        <h5 class="mb-3 text-info">Doctor Specific Details</h5>
+        
+        <div class="mb-3">
+            <label for="specialization" class="form-label">Specialization</label>
+            <input type="text" id="specialization" name="specialization" class="form-control">
+        </div>
+        
+        <div class="mb-3">
+            <label for="experience" class="form-label">Experience (Years)</label>
+            <input type="number" id="experience" name="experience" class="form-control" min="0">
+        </div>
+
+        <div class="mb-3">
+            <label for="date_joined" class="form-label">Date of Joining</label>
+            <input type="date" id="date_joined" name="date_joined" class="form-control">
+        </div>
+
+    </div>
+
+    <!-- PATIENT SPECIFIC FIELDS -->
+    <div id="patient-fields" style="display: none;">
+        <hr class="my-4">
+        <h5 class="mb-3 text-success">Patient Specific Details</h5>
+        
+        <div class="mb-3">
+            <label for="emergency_contact" class="form-label">Emergency Contact Phone</label>
+            <input type="tel" id="emergency_contact" name="emergency_contact" class="form-control">
+        </div>
+    </div>
+
+    <div class="general-field mb-3">
+        <label for="profile_photo" class="form-label">Profile Photo</label>
+        <input type="file" id="profile_photo" name="profile_photo" class="form-control" accept="image/*">
+        <small class="form-text text-muted">Max file size 2MB (Recommended: JPG or PNG)</small>
+    </div>
+
+    <div class="d-grid mt-4">
+        <button class="btn btn-primary btn-lg" type="submit">Register Account</button>
+    </div>
+</form>

@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block title %}Doctor Dashboard{% endblock %}
+{% block content %}
+
+<div class="card">
+    <div class="card-title">Welcome Dr. {{ doctor.user.first_name or doctor.user.username }}</div>
+    <div class="small-muted mb-2">Upcoming appointments (next 7 days)</div>
+
+    <!-- Upcoming appointments table -->
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Patient</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in upcoming %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ a.patient.user.first_name }} {{ a.patient.user.last_name or '' }}</td>
+                    <td>{{ a.date.strftime('%d %b %Y') }}</td>
+                    <td>{{ a.time.strftime("%I:%M %p") }}</td>
+                    <td>
+                        <span class="app-status status-{{ a.status|lower }}">{{ a.status }}</span>
+                    </td>
+                    <td>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            {# --- 1. Status: Booked → Can Confirm or Cancel --- #}
+                            {% if a.status == 'Booked' %}
+                                <form method="POST" style="display:inline;">
+                                    <input type="hidden" name="appointment_id" value="{{ a.id }}">
+                                    <input type="hidden" name="status" value="Confirmed">
+                                    <button class="btn-primary" type="submit">Confirm</button>
+                                </form>
+                                <form method="POST" style="display:inline;">
+                                    <input type="hidden" name="appointment_id" value="{{ a.id }}">
+                                    <input type="hidden" name="status" value="Cancelled">
+                                    <button class="btn-danger" type="submit" onclick="return confirm('Are you sure you want to cancel this appointment?');">Cancel</button>
+                                </form>
+
+                            {# --- 2. Status: Confirmed → Can Treat or Cancel --- #}
+                            {% elif a.status == 'Confirmed' %}
+                                    <a href="{{ url_for('doctor_treat', appointment_id=a.id) }}" class="btn-success">Treat</a>
+                                <form method="POST" style="display:inline;">
+                                    <input type="hidden" name="appointment_id" value="{{ a.id }}">
+                                    <input type="hidden" name="status" value="Cancelled">
+                                    <button class="btn-danger" type="submit" onclick="return confirm('Are you sure you want to cancel this appointment?');">Cancel</button>
+                                </form>
+                            
+                            {# --- 3. Status: Treated → Can Mark Completed --- #}
+                            {% elif a.status == 'Treated' %}
+                                <form method="POST" style="display:inline;">
+                                    <input type="hidden" name="appointment_id" value="{{ a.id }}">
+                                    <input type="hidden" name="status" value="Completed">
+                                    <button class="btn-primary" type="submit">Mark Completed</button>
+                                </form>
+
+                            {# --- 4. Status: Completed (Final State) --- #}
+                            {% elif a.status == 'Completed' %}
+                            <div class="flex">
+                                <span style="color: #155724; font-size: 15px; font-weight: 500;">✓ Completed</span>
+                                <a href="{{ url_for('doctor_view_treatment', appointment_id=a.id) }}" class="btn-success">View</a>
+                            </div>
+                            {# --- 5. Status: Cancelled (Final State) --- #}
+                            {% elif a.status == 'Cancelled' %}
+                                <span style="color: #721c24; font-size: 15px; font-style: italic;">Cancelled</span>
+                            
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📅</div>
+                            <div class="empty-state-text">No upcoming appointments for the next 7 days.</div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <hr style="margin: 40px 0;">
+    
+    <div class="small-muted mb-2" style="font-size:1.1rem; font-weight: 600;">Assigned Patients</div>
+
+    <div class="row mt-1">
+        {% for p in patients %}
+        <div class="col-3">
+            <div class="card patient-card" style="padding: 20px; text-align: center; transition: transform 0.2s, box-shadow 0.2s;">
+                <div style="margin-bottom: 15px;">
+                    <img src="{{ url_for('static', filename=(p.user.profile_photo if p.user.profile_photo else 'default_profile.png')) }}" 
+                        alt="{{ p.user.first_name or 'Patient' }}" 
+                        style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #e9ecef; margin: 0 auto; display: block;">
+                </div>
+                <div>
+                    <div style="font-weight: 600; font-size: 16px; color: #333; margin-bottom: 5px;">
+                        {{ p.user.first_name }} {{ p.user.last_name or '' }}
+                    </div>
+                    <div class="small-muted" style="margin-bottom: 15px;">
+                        {% if p.user.age %}{{ p.user.age }} yrs{% endif %}
+                        {% if p.user.age and p.user.gender %} • {% endif %}
+                        {% if p.user.gender %}{{ p.user.gender }}{% endif %}
+                    </div>
+                    <div>
+                        <a class="btn-outline" 
+                            href="{{ url_for('patient_profile', patient_id=p.id) }}" 
+                            style="display: inline-block; padding: 8px 20px; text-decoration: none;">
+                            View Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col">
+            <div class="empty-state" style="padding: 40px 20px;">
+                <div class="empty-state-icon">👥</div>
+                <div class="empty-state-text">No assigned patients yet.</div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

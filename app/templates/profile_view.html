@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}My Profile{% endblock %}
+{% block content %}
+
+<div class="card">
+
+  <div class="row">
+    <!-- Profile Photo -->
+    <div class="col-2">
+      <img 
+        src="{{ url_for('static', filename=(user.profile_photo if user.profile_photo else 'default_profile.png')) }}"
+        alt="photo"
+        style="width:120px;height:120px;object-fit:cover;border-radius:8px;">
+    </div>
+
+    <!-- Basic User Info -->
+    <div class="col">
+      <div class="card-title">
+        {{ user.first_name or user.username }} {{ user.last_name or '' }}
+      </div>
+      <div class="small-muted">{{ user.email }}</div>
+
+      <div class="nav-buttons">
+        {% if user.role=='doctor' %}
+        <a href="{{ url_for('admin_edit_doctor', id=user.doctor.id) }}">Edit profile</a>
+        {% elif user.role=='patient' %}
+        <a href="{{ url_for('admin_edit_patient', id=user.patient.id) }}">Edit profile</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- Additional Details -->
+  <div class="row mt-2">
+    <div class="col-6 small-muted">
+      <div><strong>Age:</strong> {{ user.age }}</div>
+      <div><strong>Gender:</strong> {{ user.gender }}</div>
+    </div>
+
+    <div class="col-6 small-muted">
+      <div><strong>Phone:</strong> {{ user.phone }}</div>
+      <div><strong>Address:</strong> {{ user.address }}</div>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

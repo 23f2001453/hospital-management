@@ -1,0 +1,10 @@
+/* style_patient.css
+   Patient pages: doctor list cards, appointment cards
+*/
+.doctor-card{
+  display:flex;gap:0.8rem;align-items:center;padding:0.8rem;border-radius:10px;border:1px solid #e9f4f6;background:white;
+}
+.doctor-card img{width:64px;height:64px;border-radius:8px;object-fit:cover}
+.appt-card{padding:0.6rem;border-radius:8px;border:1px solid #f0f7f7;background:#fff}
+.book-btn{background:var(--accent);color:white;border-radius:8px;padding:0.4rem 0.6rem}
+.doctor-meta{font-size:0.9rem;color:var(--muted)}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Edit Availability Slot{% endblock %}
+{% block content %}
+
+<div class="card" style="max-width: 800px; margin: 20px auto;">
+    <h2 class="card-title">Edit Availability Slot</h2>
+    <p class="small-muted mb-2">Editing Slot ID: {{ slot.id }} (Current Date: {{ slot.date.strftime('%Y-%m-%d') }})</p>
+
+    <form method="POST">
+        
+        <div class="mb-3">
+            <label for="date" class="form-label">Date</label>
+            <input type="date" id="date" name="date" class="form-control" 
+                   value="{{ slot.date.strftime('%Y-%m-%d') }}" required>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="start_time" class="form-label">Start Time</label>
+                <input type="time" id="start_time" name="start_time" class="form-control" 
+                       value="{{ slot.start_time.strftime('%H:%M') }}" required>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label for="end_time" class="form-label">End Time</label>
+                <input type="time" id="end_time" name="end_time" class="form-control" 
+                       value="{{ slot.end_time.strftime('%H:%M') }}" required>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="slot_capacity" class="form-label">Capacity (Max Bookings)</label>
+            <input type="number" id="slot_capacity" name="slot_capacity" class="form-control" min="1" 
+                   value="{{ slot.slot_capacity or 1 }}" required>
+        </div>
+
+        <div class="d-grid mt-4">
+            <button type="submit" class="btn btn-secondary mt-3">Save Changes</button>
+        </div>
+        
+    </form>
+    
+    <a href="{{ url_for('doctor_availability') }}" class="btn btn-secondary mt-3">Cancel</a>
+</div>
+
+{% endblock %}

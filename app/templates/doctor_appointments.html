@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Doctor Appointments{% endblock %}
+{% block content %}
+  <div class="card">
+    <div class="page-title">All Appointments</div>
+    <table class="table-clean">
+      <thead><tr><th>#</th><th>Patient</th><th>Date</th><th>Time</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for a in appointments %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ a.patient.user.first_name or a.patient.name }}</td>
+          <td>{{ a.date }}</td>
+          <td>{{ a.time.strftime("%H:%M") }}</td>
+          <td>{{ a.status }}</td>
+          <td>
+            <a class="btn-outline" href="{{ url_for('doctor_treat', appointment_id=a.id) }}">Treat</a>
+            <form method="post" action="{{ url_for('doctor_update_appointment_status', appointment_id=a.id) }}" style="display:inline">
+              <input type="hidden" name="status" value="Cancelled">
+              <button class="btn-outline" type="submit">Cancel</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="small-muted">No appointments found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

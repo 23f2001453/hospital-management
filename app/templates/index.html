@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <header class="hero-section text-center py-5 bg-light">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-3" style="color: #007bff;">
+                Hospital Management System
+            </h1>
+            <p class="lead text-muted mb-4">
+                Modernizing Healthcare: Speed, Accuracy, and Secure Care Coordination.
+            </p>
+            
+            <div class="d-grid gap-2 d-md-block">
+                <a href="{{ url_for('login') }}" class="btn btn-outline-secondary btn-lg px-5">
+                    <i class="fas fa-sign-in-alt me-2"></i> Log In
+                </a>
+                <a href="{{ url_for('register') }}" class="btn btn-outline-secondary btn-lg px-5">
+                    <i class="fas fa-user-plus me-2"></i> Register Account
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <hr class="my-5">
+
+    <section class="features-section container py-5">
+        <h2 class="text-center mb-5" style="color: #343a40;">Efficiency and Excellence</h2>
+        
+        <div class="row text-center">
+            <div class="col-md-4 mb-4">
+                <div class="icon-box p-4 border rounded shadow-sm h-100">
+                    <i class="fas fa-user-md fa-3x mb-3 text-primary"></i>
+                    <h5 class="fw-bold">Seamless Patient Care</h5>
+                    <p class="text-muted">Reduced waiting times, improved care coordination, and easy access to reports for patients.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="icon-box p-4 border rounded shadow-sm h-100">
+                    <i class="fas fa-notes-medical fa-3x mb-3 text-success"></i>
+                    <h5 class="fw-bold">Instant Record Access</h5>
+                    <p class="text-muted">Doctors instantly access patient histories, prescriptions, and reports without manual searching.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="icon-box p-4 border rounded shadow-sm h-100">
+                    <i class="fas fa-chart-line fa-3x mb-3 text-warning"></i>
+                    <h5 class="fw-bold">Real-Time Administration</h5>
+                    <p class="text-muted">Administrators track billing, payments, inventory, and insights with complete transparency.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="my-5">
+
+    <section class="trust-section text-center py-5 bg-light">
+        <div class="container">
+            <h2 class="mb-3" style="color: #343a40;">Secure. Reliable. Scalable.</h2>
+            <p class="lead text-muted mb-4">
+                We prioritize **Security and Privacy** with strong protection for all sensitive medical data, supporting clinics and large healthcare networks alike.
+            </p>
+            <i class="fas fa-lock fa-3x text-secondary"></i>
+        </div>
+    </section>
+
+{% endblock %}

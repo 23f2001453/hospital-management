@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6"> <!-- Increased width for more form fields -->
+
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-body p-4 p-md-5">
+
+                    <h3 class="text-center mb-4 text-primary">{{ title }}</h3>
+                    
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            <div class="mb-3">
+                                {% for category, message in messages %}
+                                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+
+                    {% include "register_form_inner.html" %}
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    // JavaScript to toggle fields based on role selection
+    document.addEventListener('DOMContentLoaded', function() {
+        const roleSelect = document.getElementById('role');
+        const patientFields = document.getElementById('patient-fields');
+        const doctorFields = document.getElementById('doctor-fields');
+        const generalFields = document.querySelectorAll('.general-field');
+        
+        if (roleSelect) {
+            function toggleFields() {
+                const role = roleSelect.value;
+                
+                // Hide all fields initially
+                // Null checks added for safety, though they should exist if roleSelect does
+                if (patientFields) patientFields.style.display = 'none';
+                if (doctorFields) doctorFields.style.display = 'none';
+
+                // Show general fields only if a role is selected (e.g., patient or doctor)
+                // This is simplified based on the logic, assuming admin only needs basic user fields
+                const displayGeneral = (role === 'patient' || role === 'doctor');
+                generalFields.forEach(field => {
+                    field.style.display = displayGeneral ? 'block' : 'none';
+                });
+                
+                if (role === 'patient' && patientFields) {
+                    patientFields.style.display = 'block';
+                } else if (role === 'doctor' && doctorFields) {
+                    doctorFields.style.display = 'block';
+                }
+            }
+            
+            roleSelect.addEventListener('change', toggleFields);
+            
+            // Run on page load to set initial state
+            toggleFields();
+        }
+    });
+</script>
+{% endblock %}

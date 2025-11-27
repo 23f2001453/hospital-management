@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+  <div class="card">
+    <div class="admin-top">
+      <div>
+        <div class="card-title">Admin Dashboard</div>
+        <div class="small-muted mb-2">Manage doctors & patients</div>
+      </div>
+      <div>
+        <a href="{{ url_for('admin_add_doctor') }}" class="btn-outline">Add Doctor</a>
+        <a href="{{ url_for('admin_add_patient') }}" class="btn-outline">Add Patient</a>
+      </div>
+    </div>
+
+    <div class="admin-counts">
+      <div class="count-card card">
+        <div style="font-weight:700">{{ doctor_count }}</div>
+        <div class="small-muted">Doctors</div>
+      </div>
+      <div class="count-card card">
+        <div style="font-weight:700">{{ patient_count }}</div>
+        <div class="small-muted">Patients</div>
+      </div>
+      <div class="count-card card">
+        <div style="font-weight:700">{{ appointment_count }}</div>
+        <div class="small-muted">Upcoming Appointments</div>
+      </div>
+      <div class="count-card card">
+        <div style="font-weight:700">{{ completed_count }}</div>
+        <div class="small-muted">Completed Appointments</div>
+      </div>
+    </div>
+
+    <h4>Doctors</h4>
+    <table class="table-clean">
+      <thead>
+        <tr>
+          <th>S.No</th>
+          <th>Name</th>
+          <th>Specialization</th>
+          <th>Experience</th>
+          <th>Phone Number</th>
+          <th>Email</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for d in doctors %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ d.user.first_name }} {{ d.user.last_name or None }}</td>
+          <td>{{ d.specialization }}</td>
+          <td>{{ d.experience_years }}</td>
+          <td>{{ d.user.phone }}</td>
+          <td>{{ d.user.email }}</td>
+          <td class="table-actions">
+            <a href="{{ url_for('admin_edit_doctor', id=d.id) }}" class="btn-edit">Edit</a> 
+            <a href="{{ url_for('admin_delete_doctor', id=d.id) }}" class="btn-delete"
+            onclick="return confirm('Are you sure you want to delete {{ d.user.first_name }} record?');">
+              Delete
+              </a>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="8">
+              <div class="empty-state">
+                  <div class="empty-state-icon">📅</div>
+                  <div class="empty-state-text">Currently no Doctors available.</div>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h4 class="mt-3">Patients</h4>
+    <table class="table-clean">
+      <thead>
+        <tr>
+          <th>S.No</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Age</th>
+          <th>Phone</th>
+          <th>Secondary Contact</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in patients %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ p.user.first_name }} {{ p.user.last_name or None }}</td>
+          <td>{{ p.user.email }}</td>
+          <td>{{ p.user.age }}</td>
+          <td>{{ p.user.phone }}</td>
+          <td>{{ p.emergency_contact }}</td>
+          <td class="table-actions">
+            <a href="{{ url_for('admin_edit_patient', id=p.id) }}" class="btn-edit">Edit</a> 
+            <a href="{{ url_for('admin_delete_patient', id=p.id) }}" class="btn-delete"
+            onclick="return confirm('Are you sure you want to delete {{ p.user.first_name }} record?');">
+              Delete
+              </a>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="8">
+            <div class="empty-state">
+              <div class="empty-state-icon">📅</div>
+                <div class="empty-state-text">Currently no Patients available.</div>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!--UPCOMING APPOINTMENTS SECTION -->
+    <h4 class="mt-3">Upcoming Appointments</h4>
+    <table class="table-clean">
+      <thead>
+        <tr>
+          <th>S.No</th>
+          <th>Patient</th>
+          <th>Doctor</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in appointments %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ a.patient.user.username }}</td>
+          <td>{{ a.doctor.user.username }}</td>
+          <td>{{ a.date.strftime("%d-%m-%Y") }}</td>
+          <td>{{ a.time.strftime("%I:%M %p") }}</td>
+          <td>{{ a.status }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="8">
+              <div class="empty-state">
+                  <div class="empty-state-icon">📅</div>
+                  <div class="empty-state-text">No upcoming Appointments</div>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h4 class="mt-3">Completed Appointments</h4>
+    <table class="table-clean">
+      <thead>
+        <tr>
+          <th>S.No</th>
+          <th>Patient</th>
+          <th>Doctor</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in completed_appointments %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ c.patient.user.username }}</td>
+          <td>{{ c.doctor.user.username }}</td>
+          <td>{{ c.date.strftime("%d-%m-%Y") }}</td>
+          <td>{{ c.time.strftime("%I:%M %p") }}</td>
+          <td><span class="text-success">{{ c.status }}</span></td>
+          <td class="table-actions">
+                <div class="nav-buttons">
+                <a href="{{ url_for('patient_profile', patient_id=c.patient.id) }}" style="text-decoration:none;" >View History</a>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="8">
+              <div class="empty-state">
+                  <div class="empty-state-icon">📅</div>
+                  <div class="empty-state-text">No Appointments</div>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

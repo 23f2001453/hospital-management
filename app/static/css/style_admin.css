@@ -1,0 +1,19 @@
+/* style_admin.css
+   Admin-specific tweaks: lists, action buttons, badges
+*/
+.admin-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:1rem;
+  margin-bottom:1rem;
+}
+.admin-panel .card{padding:1.2rem}
+.table-actions a{margin-right:0.6rem;color:var(--accent)}
+.badge{
+  display:inline-block;padding:0.25rem 0.5rem;border-radius:6px;font-size:0.85rem;
+}
+.badge-doctor{background:#e6f7f9;color:var(--accent-2)}
+.badge-patient{background:#f0f8f1;color:#107a1f}
+.admin-counts{display:flex;gap:1rem;margin-bottom:0.8rem}
+.admin-counts .count-card{flex:1;padding:0.8rem;text-align:center}

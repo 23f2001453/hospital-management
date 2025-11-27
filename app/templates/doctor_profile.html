@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block content %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style_patient.css') }}">
+
+<div class="container mt-4">
+    <h2 class="card">Doctor Profile</h2>
+
+    <div class="card shadow-sm p-3">
+        <div class="row">
+
+            <!-- Doctor Image -->
+            <div class="col-md-3 text-center">
+                <img src="{{ url_for('static', filename=(doctor.user.profile_photo if doctor.user.profile_photo else 'default_profile.png')) }}"
+                     class="rounded-circle" width="140" height="140">
+            </div>
+
+            <!-- Doctor Details -->
+            <div class="col-md-9">
+                <h3>
+                    Dr. {{ doctor.user.first_name or doctor.name }}
+                    {{ doctor.user.last_name or '' }}
+                </h3>
+                <p><strong>Specialization:</strong> {{ doctor.specialization }}</p>
+                <p><strong>Experience:</strong> {{ doctor.experience }} years</p>
+            </div>
+
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Availability Section -->
+    <h4 class="mt-4">Available Slots</h4>
+
+    {% if availabilities %}
+    <table class="table-clean">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Booked</th>
+                <th>Total Slots</th>
+                <th>Remaining</th>
+                <th>Book</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {% for s in availabilities %}
+            <tr>
+                <td>{{ s.date.strftime('%d-%m-%Y') }}</td>
+                <td>{{ s.start_time }} - {{ s.end_time }}</td>
+                <td>{{ s.booked }}</td>
+                <td>{{ s.slot_capacity }}</td>
+                <td>{{ s.slot_capacity - s.booked }}</td>
+                <td>
+                    {% if (s.slot_capacity - s.booked) > 0 %}
+                        <!-- THE CHANGE IS HERE: Use a form for POST request -->
+                        <form method="POST" action="{{ url_for('book_appointment') }}">
+                            <!-- Send the availability ID as a hidden form field -->
+                            <input type="hidden" name="availability_id" value="{{ s.id }}">
+                            <input type="hidden" name="doctor_id" value="{{ doctor.id }}">
+
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                Book Now
+                            </button>
+                        </form>
+                    {% else %}
+                        <span class="text-danger fw-bold">Full</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+    {% else %}
+        <tr><td colspan="8">
+              <div class="empty-state">
+                  <div class="empty-state-icon">📅</div>
+                  <div class="empty-state-text">No upcoming Appointments</div>
+              </div>
+            </td>
+          </tr>
+    {% endif %}
+
+</div>
+
+{% endblock %}

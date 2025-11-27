@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block title %}Treatment Details{% endblock %}
+{% block content %}
+
+<div class="card @printable-area">
+  <div class="admin-top">
+    <div>
+      <div class="card-title">Treatment Record</div>
+      <div class="small-muted mb-2">Appointment #{{ appointment.id }} - {{ appointment.date.strftime('%d %B %Y') }}</div>
+    </div>
+    <div>
+      <a href="{{ url_for('doctor_dashboard') }}" class="btn-outline">Back</a>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-4">
+      <h6>Patient Information</h6>
+      <div class="doctor-card" style="display: block;">
+        <img src="{{ url_for('static', filename=(appointment.patient.user.profile_photo if appointment.patient.user.profile_photo else 'default_profile.png')) }}" 
+             alt="" style="width: 100px; height: 100px; border-radius: 50%;">
+        <div class="mt-2">
+          <strong>
+            {% if appointment.patient.user.gender == 'Male' %} Mr. 
+            {% else %} Ms. 
+            {% endif %} 
+                {{ appointment.doctor.user.first_name }} {{ appointment.doctor.user.last_name }}
+            </strong>
+          <div class="small-muted">Phone number</div>
+          <div class="small-muted">{{ appointment.patient.user.phone }}</div>
+        </div>
+      </div>
+
+      <div class="mt-3">
+        <h6>Appointment Details</h6>
+        <div class="small-muted mb-1"><strong>Date:</strong> {{ appointment.date.strftime('%d %B %Y') }}</div>
+        <div class="small-muted mb-1"><strong>Time:</strong> {{ appointment.time.strftime('%I:%M %p') }}</div>
+        <div class="small-muted mb-1"><strong>Status:</strong> <span class="badge badge-success">{{ appointment.status }}</span></div>
+      </div>
+    </div>
+
+    <div class="col-auto doctor-card" style="display: block;">
+      <div class="section-title">
+        <h5>Treatment Details</h5>
+      </div>
+      <div class="treatment-section">
+        <h6>Diagnosis</h6>
+        <div class="treatment-box">
+          {% if appointment.treatment.diagnosis %}
+            {{ appointment.treatment.diagnosis }}
+          {% else %}
+            <span class="small-muted">No diagnosis recorded</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="treatment-section">
+        <h6>Prescription</h6>
+        <div class="treatment-box">
+          {% if appointment.treatment.prescription %}
+            <pre style="white-space: pre-wrap; font-family: inherit; margin: 0;">{{ appointment.treatment.prescription }}</pre>
+          {% else %}
+            <span class="small-muted">No prescription provided</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="treatment-section">
+        <h6>Treatment Notes</h6>
+        <div class="treatment-box">
+          {% if appointment.treatment.treatment_notes %}
+            <pre style="white-space: pre-wrap; font-family: inherit; margin: 0;">{{ appointment.treatment.treatment_notes }}</pre>
+          {% else %}
+            <span class="small-muted">No additional notes</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="nav-buttons">
+        <button onclick="window.print()">Print Treatment Record</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+@media print {
+    body * {
+        visibility: hidden !important;
+    }
+
+    .card, .card * {
+        visibility: visible !important;
+    }
+
+    .card {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+
+    /* Optional: hide the print button itself */
+    button[onclick="window.print()"] {
+        display: none !important;
+    }
+}
+
+.treatment-section {
+    margin-bottom: 20px;
+}
+.treatment-box {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    min-height: 60px;
+}
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 4px;
+}
+.badge-success {
+    background-color: #5cb85c;
+    color: white;
+}
+</style>
+
+{% endblock %}

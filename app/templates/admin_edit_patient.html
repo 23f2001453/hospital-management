@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block title %}Edit Patient{% endblock %}
+{% block content %}
+
+<div class="card" style="max-width: 800px; margin: 20px auto;">
+    <div class="admin-top">
+        <div>
+            <div class="card-title">{{ message }}</div>
+            <div class="small-muted mb-2">{{ secondary_message }}</div>
+        </div>
+        <div>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn-outline">Back to Dashboard</a>
+        </div>
+    </div>
+
+    <form method="POST" action="{{ url_for('admin_edit_patient', id=patient.id) }}" enctype="multipart/form-data" style="padding: 20px;">
+        
+        <h5 style="margin-bottom: 15px; color: #333;">Account Information</h5>
+        
+        <div class="mb-3">
+            <label for="username" class="form-label">Username <span style="color: red;">*</span></label>
+            <input type="text" id="username" name="username" class="form-control" value="{{ form_data.get('username', '') }}" required>
+            {% if errors.get('username') %}
+                <small class="text-danger">{{ errors['username'] }}</small>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Email <span style="color: red;">*</span></label>
+            <input type="email" id="email" name="email" class="form-control" value="{{ form_data.get('email', '') }}" required>
+            {% if errors.get('email') %}
+                <small class="text-danger">{{ errors['email'] }}</small>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">Password <small style="color: #6c757d;">(Leave blank to keep current)</small></label>
+            <input type="password" id="password" name="password" class="form-control" minlength="6">
+            {% if errors.get('password') %}
+                <small class="text-danger">{{ errors['password'] }}</small>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="confirm_password" class="form-label">Confirm Password</label>
+            <input type="password" id="confirm_password" name="confirm_password" class="form-control">
+            {% if errors.get('confirm_password') %}
+                <small class="text-danger">{{ errors['confirm_password'] }}</small>
+            {% endif %}
+        </div>
+
+        <hr style="margin: 30px 0;">
+        <h5 style="margin-bottom: 15px; color: #333;">Personal Details</h5>
+
+        <div class="mb-3">
+            <label for="first_name" class="form-label">First Name <span style="color: red;">*</span></label>
+            <input type="text" id="first_name" name="first_name" class="form-control" value="{{ form_data.get('first_name', '') }}" required>
+            {% if errors.get('first_name') %}
+                <small class="text-danger">{{ errors['first_name'] }}</small>
+            {% endif %}
+        </div>
+        
+        <div class="mb-3">
+            <label for="last_name" class="form-label">Last Name <span style="color: red;">*</span></label>
+            <input type="text" id="last_name" name="last_name" class="form-control" value="{{ form_data.get('last_name', '') }}" required>
+            {% if errors.get('last_name') %}
+                <small class="text-danger">{{ errors['last_name'] }}</small>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="phone" class="form-label">Phone Number <span style="color: red;">*</span></label>
+            <input type="tel" id="phone" name="phone" class="form-control" value="{{ form_data.get('phone', '') }}" required>
+            {% if errors.get('phone') %}
+                <small class="text-danger">{{ errors['phone'] }}</small>
+            {% endif %}
+        </div>
+        
+        <div class="mb-3">
+            <label for="age" class="form-label">Age <span style="color: red;">*</span></label>
+            <input type="number" id="age" name="age" class="form-control" min="1" max="120" value="{{ form_data.get('age', '') }}" required>
+            {% if errors.get('age') %}
+                <small class="text-danger">{{ errors['age'] }}</small>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="gender" class="form-label">Gender <span style="color: red;">*</span></label>
+            <select id="gender" name="gender" class="form-select" required>
+                <option value="">-- Select Gender --</option>
+                <option value="Male" {% if form_data.get('gender') == 'Male' %}selected{% endif %}>Male</option>
+                <option value="Female" {% if form_data.get('gender') == 'Female' %}selected{% endif %}>Female</option>
+                <option value="Other" {% if form_data.get('gender') == 'Other' %}selected{% endif %}>Other</option>
+            </select>
+            {% if errors.get('gender') %}
+                <small class="text-danger">{{ errors['gender'] }}</small>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="address" class="form-label">Address <span style="color: red;">*</span></label>
+            <textarea id="address" name="address" class="form-control" rows="2" required>{{ form_data.get('address', '') }}</textarea>
+            {% if errors.get('address') %}
+                <small class="text-danger">{{ errors['address'] }}</small>
+            {% endif %}
+        </div>
+        
+        <div class="mb-3">
+            <label for="emergency_contact" class="form-label">Secondary Contact Number <span style="color: red;">*</span></label>
+            <input type="text" id="emergency_contact" name="emergency_contact" class="form-control" value="{{ form_data.get('emergency_contact', '') }}" required>
+            {% if errors.get('emergency_contact') %}
+                <small class="text-danger">{{ errors['emergency_contact'] }}</small>
+            {% endif %}
+        </div>
+
+        <div class="general-field mb-3">
+            <label for="profile_photo" class="form-label">Profile Photo</label>
+            <input type="file" id="profile_photo" name="profile_photo" class="form-control" accept="image/*">
+            <small class="form-text text-muted">Max file size 2MB (Recommended: JPG or PNG)</small>
+        </div>
+
+        <div class="nav-buttons">
+            <button type="submit" style="width: 100%;">Update Patient</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Patient Dashboard{% endblock %}
+{% block content %}
+
+<div class="card">
+    <div class="card-title">Welcome, {{ patient.user.first_name or patient.user.username }}</div>
+
+    <div class="row mt-2">
+        <!-- Left Column: Upcoming Appointments -->
+        <div class="col-3">
+            <div class="small-muted mb-2" style="font-size:1.1rem; font-weight: 600;">Upcoming Appointments</div>
+            
+            {% for a in appointments %}
+            <div class="card" style="padding: 15px; margin-bottom: 15px;">
+                <div style="margin-bottom: 8px;">
+                    <strong style="font-size: 15px;">Dr. {{ a.doctor.user.first_name or a.doctor.user.username }} {{ a.doctor.user.last_name or '' }}</strong>
+                </div>
+                <div class="small-muted" style="margin-bottom: 10px;">
+                    {{ a.date.strftime('%d/%m/%Y') }} • {{ a.time.strftime("%I:%M %p") }}
+                </div>
+                <div>
+                    {% if a.status == 'Booked' %}
+                    <form method="post" action="{{ url_for('patient_cancel_appointment', appointment_id=a.id) }}" style="display:inline;">
+                        <button class="btn-outline" type="submit" onclick="return confirm('Are you sure you want to cancel this appointment?');" style="width: 100%;">Cancel</button>
+                    </form>
+                    {% elif a.status == 'Completed' %}
+                    <a href="{{ url_for('patient_view_treatment', appointment_id=a.id) }}" class="btn-outline" style="display: block; text-align: center; text-decoration: none;">View Treatment</a>
+                    {% else %}
+                    <span class="app-status status-{{ a.status|lower }}">{{ a.status }}</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% else %}
+            <div class="empty-state" style="padding: 40px 20px;">
+                <div class="empty-state-icon">📅</div>
+                <div class="empty-state-text">No upcoming appointments.</div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Right Column: Doctors List -->
+        <div class="col">
+            <div class="small-muted mb-2" style="font-size:1.1rem; font-weight: 600;">Doctors</div>
+            
+            {% for d in doctors %}
+            <div class="card" style="padding: 15px; margin-bottom: 15px; display: flex; align-items: center; gap: 15px;">
+                <div>
+                    <img src="{{ url_for('static', filename=(d.user.profile_photo if d.user.profile_photo else 'default_profile.png')) }}" 
+                         alt="Dr. {{ d.user.first_name }}" 
+                         style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid #e9ecef;">
+                </div>
+                <div style="flex: 1;">
+                    <a href="{{ url_for('doctor_profile', id=d.id) }}" style="font-weight:600; font-size: 15px; color: var(--accent); text-decoration: none;">
+                        Dr. {{ d.user.first_name or d.user.username }} {{ d.user.last_name or '' }}
+                    </a>
+                    <div class="small-muted" style="margin-top: 3px;">{{ d.specialization }}</div>
+                    <div class="small-muted" style="font-size: 12px;">{{ d.experience_years }} years experience</div>
+                </div>
+                <div>
+                    <a class="btn-outline" href="{{ url_for('doctor_profile', id=d.id) }}" style="white-space: nowrap; text-decoration: none;">Check availability</a>
+                </div>
+            </div>
+            {% else %}
+            <div class="empty-state" style="padding: 40px 20px;">
+                <div class="empty-state-icon">👨‍⚕️</div>
+                <div class="empty-state-text">No doctors available.</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<style>
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 4px;
+}
+.badge-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+</style>
+{% endblock %}
