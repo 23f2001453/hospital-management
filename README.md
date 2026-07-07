@@ -73,7 +73,7 @@ python app.py
 
 📄 Full project report:
 
-**[](MAD-1_Project_Report.pdf)**
+**[Project Report](MAD-1_Project_Report.pdf)**
 
 ---
 
