@@ -79,7 +79,9 @@ python app.py
 
 ## Demo
 
-🎥 Add your project demo GIF or video here.
+🎥 project demo:
+
+**[Project Video](https://drive.google.com/file/d/1QVUceKNRff9UsejVYp926f_m3ihuNqhk)**
 
 ---
 
