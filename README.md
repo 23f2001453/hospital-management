@@ -38,18 +38,10 @@ A web-based Hospital Management System developed using **Flask** following a mod
 
 ## Screenshots
 
-### Login Page
-
-![Login](assets/login.png)
-
----
-
-### Admin Dashboard
-
-![Admin](assets/Screenshot 2026-05-15 205039.png)
-![Admin](assets/Screenshot 2026-05-15 205103.png)
-![Admin](assets/Screenshot 2026-05-15 205123.png)
-![Admin](assets/Screenshot 2026-05-15 205137.png)
+![Admin](assets/Screenshot_2026-05-15_205039.png)
+![Admin](assets/Screenshot_2026-05-15_205103.png)
+![Admin](assets/Screenshot_2026-05-15_205123.png)
+![Admin](assets/Screenshot_2026-05-15_205137.png)
 
 ## Project Structure
 
